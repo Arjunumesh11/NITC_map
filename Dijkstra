@@ -1,0 +1,56 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define INF 0x3f3f3f3f
+vector<pair<int,int>> *G;
+vector<int> dist;
+typedef pair<int,int> pii;
+typedef vector< pii > vii;
+void dj(int source,int N)
+{
+    vector<bool> visited(N,false);
+    dist.assign(N,INF);
+    dist[source]=0;
+    priority_queue<pii, vector<pii>, greater<pii> > Q;
+    Q.push({0,source});
+    while(!Q.empty())
+    {
+        int u=Q.top().second;
+        Q.pop();
+        visited[u]=true;
+        for(auto &c:G[u])
+        {
+            if(!visited[c.second])
+            {
+                int v = c.second;
+                int w = c.first;
+                if(dist[v] > dist[u]+w)
+                {
+                    dist[v] = dist[u]+w;
+                    Q.push({dist[v],v}); 
+                }
+            }
+        }
+
+        
+    }
+}
+int main() 
+{
+    int N, M, u, v, w, source;  
+    cin >> N >> M;              
+    G = new vii[N+1];
+    
+    for(int i=0;i<M;++i){
+        cin >> u >> v >> w;
+        G[u].push_back({v,w});
+        G[v].push_back({u,w});
+    }
+    cin >> source;
+    dj(source,N);
+    
+    for(int i=0;i<N;i++)
+        cout<<dist[i]<<" ";
+    cout<<endl;
+    
+    return 0;
+}
